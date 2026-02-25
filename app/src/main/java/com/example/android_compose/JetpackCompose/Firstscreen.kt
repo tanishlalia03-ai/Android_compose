@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.contracts.contract
 
 @Composable
 fun Firstscreen() {
@@ -188,16 +190,31 @@ fun listItem(task: Task) {
 
 @Composable
 fun AssignmentScreen() {
+    val context = LocalContext.current
+
     // A list of 20 items to demonstrate the scrolling
     val itemsList = List(20) { index -> "Hello ${index + 1}" }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFEADDFF)) // Light purple background for the whole list
-    ) {
-        itemsIndexed(itemsList) { index, itemText ->
-            PurpleListItem(text = itemText)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    Toast.makeText(context, "Hello buddy", Toast.LENGTH_SHORT).show()
+                }
+            ) { Icon(Icons.Default.Add, contentDescription = "add") }
+        }
+    ) {innerPadding->
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(Color(0xFFEADDFF)) // Light purple background for the whole list
+        ) {
+            itemsIndexed(itemsList) { index, itemText ->
+                PurpleListItem(text = itemText)
+
+            }
         }
     }
 }

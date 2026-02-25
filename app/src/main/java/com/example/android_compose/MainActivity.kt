@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.android_compose.JetpackCompose.AssignmentScreen
 import com.example.android_compose.ui.theme.Android_composeTheme
 import com.example.android_compose.JetpackCompose.Firstscreen
 
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
             Android_composeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        Firstscreen()
+                        AssignmentScreen()
                     }
                 }
             }
