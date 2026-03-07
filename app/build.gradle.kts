@@ -60,4 +60,8 @@ dependencies {
 
 
     debugImplementation("androidx.compose.ui:ui-tooling")
+
+    // bottom navigation dependencies
+    implementation("androidx.navigation:navigation-compose:2.8.5")
+    implementation("androidx.compose.material3:material3")
 }

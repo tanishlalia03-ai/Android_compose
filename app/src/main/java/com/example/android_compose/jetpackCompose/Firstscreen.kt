@@ -1,4 +1,4 @@
-package com.example.android_compose.JetpackCompose
+package com.example.android_compose.jetpackCompose
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -39,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.contracts.contract
 
 @Composable
 fun Firstscreen() {
@@ -245,14 +244,14 @@ fun PurpleListItem(text: String) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // CHANGED: Added colors parameter here
+
             Button(
                 onClick = {
                     Toast.makeText(context, "More info for $text", Toast.LENGTH_SHORT).show()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Green,      // Background of the button
-                    contentColor = Color.White       // Color of the text inside the button
+                    containerColor = Color.Green,
+                    contentColor = Color.White
                 )
             ) {
                 Text(text = "More")
