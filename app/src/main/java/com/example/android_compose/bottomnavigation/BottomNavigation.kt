@@ -25,14 +25,22 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
-
+/**
+ * 1. Define the Screens
+ * Using 'data object' is preferred in modern Kotlin for sealed classes.
+ */
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
-    object Home : Screen("home", "Home", Icons.Default.Home)
-    object Search : Screen("search", "Search", Icons.Default.Search)
-    object Profile : Screen("profile", "Profile", Icons.Default.Person)
+    data object Home : Screen("home", "Home", Icons.Default.Home)
+    data object Search : Screen("search", "Search", Icons.Default.Search)
+    data object Profile : Screen("profile", "Profile", Icons.Default.Person)
 }
 
-val navItems = listOf(Screen.Home, Screen.Search, Screen.Profile)
+// List of items to iterate through in the NavigationBar
+val navItems = listOf(
+    Screen.Home,
+    Screen.Search,
+    Screen.Profile
+)
 
 @Composable
 fun MainAppContainer() {
@@ -41,20 +49,26 @@ fun MainAppContainer() {
     Scaffold(
         bottomBar = {
             NavigationBar {
+                // Observe the backstack to highlight the correct tab
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
                 navItems.forEach { screen ->
+                    val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+
                     NavigationBarItem(
                         icon = { Icon(screen.icon, contentDescription = screen.label) },
                         label = { Text(screen.label) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                        selected = isSelected,
                         onClick = {
                             navController.navigate(screen.route) {
+                                // Pop up to the start destination to avoid stack buildup
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
+                                // Avoid multiple copies of the same destination when re-selecting
                                 launchSingleTop = true
+                                // Restore state when re-selecting a previously selected item
                                 restoreState = true
                             }
                         }
@@ -63,17 +77,29 @@ fun MainAppContainer() {
             }
         }
     ) { innerPadding ->
+        // 2. The NavHost
+        // Added Modifier.fillMaxSize() and applied innerPadding from Scaffold
         NavHost(
             navController = navController,
             startDestination = Screen.Home.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            composable(Screen.Home.route) { HomeScreen("Home content") }
-            composable(Screen.Search.route) { SearchScreen("Search Content") }
-            composable(Screen.Profile.route) { ProfileScreen("Profile Content") }
+            composable(Screen.Home.route) {
+                HomeScreen("Welcome to the Home Screen!")
+            }
+            composable(Screen.Search.route) {
+                SearchScreen("Looking for something?")
+            }
+            composable(Screen.Profile.route) {
+                ProfileScreen("Your Personal Profile")
+            }
         }
     }
 }
+
+// --- Individual Screen Composables ---
 
 @Composable
 fun HomeScreen(text: String) {
