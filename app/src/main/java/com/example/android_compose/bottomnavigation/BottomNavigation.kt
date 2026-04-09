@@ -24,51 +24,39 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.android_compose.view.HomeScreen
 
-/**
- * 1. Define the Screens
- * Using 'data object' is preferred in modern Kotlin for sealed classes.
- */
+
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
-    data object Home : Screen("home", "Home", Icons.Default.Home)
-    data object Search : Screen("search", "Search", Icons.Default.Search)
-    data object Profile : Screen("profile", "Profile", Icons.Default.Person)
+    object Home : Screen("home", "Home", Icons.Default.Home)
+    object Search : Screen("search", "Search", Icons.Default.Search)
+    object Profile : Screen("profile", "Profile", Icons.Default.Person)
 }
 
-// List of items to iterate through in the NavigationBar
-val navItems = listOf(
-    Screen.Home,
-    Screen.Search,
-    Screen.Profile
-)
+val navItems = listOf(Screen.Home, Screen.Search, Screen.Profile)
 
 @Composable
 fun MainAppContainer() {
+
     val navController = rememberNavController()
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-                // Observe the backstack to highlight the correct tab
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
                 navItems.forEach { screen ->
-                    val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-
                     NavigationBarItem(
                         icon = { Icon(screen.icon, contentDescription = screen.label) },
                         label = { Text(screen.label) },
-                        selected = isSelected,
+                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
                             navController.navigate(screen.route) {
-                                // Pop up to the start destination to avoid stack buildup
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
-                                // Avoid multiple copies of the same destination when re-selecting
                                 launchSingleTop = true
-                                // Restore state when re-selecting a previously selected item
                                 restoreState = true
                             }
                         }
@@ -77,34 +65,15 @@ fun MainAppContainer() {
             }
         }
     ) { innerPadding ->
-        // 2. The NavHost
-        // Added Modifier.fillMaxSize() and applied innerPadding from Scaffold
         NavHost(
             navController = navController,
             startDestination = Screen.Home.route,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+            modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Home.route) {
-                HomeScreen("Welcome to the Home Screen!")
-            }
-            composable(Screen.Search.route) {
-                SearchScreen("Looking for something?")
-            }
-            composable(Screen.Profile.route) {
-                ProfileScreen("Your Personal Profile")
-            }
+            composable(Screen.Home.route) { HomeScreen() }
+            composable(Screen.Search.route) { SearchScreen("Search Content") }
+            composable(Screen.Profile.route) { ProfileScreen("Profile Content") }
         }
-    }
-}
-
-// --- Individual Screen Composables ---
-
-@Composable
-fun HomeScreen(text: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = text, style = MaterialTheme.typography.headlineMedium)
     }
 }
 
@@ -114,6 +83,7 @@ fun SearchScreen(text: String) {
         Text(text = text, style = MaterialTheme.typography.headlineMedium)
     }
 }
+
 
 @Composable
 fun ProfileScreen(text: String) {
