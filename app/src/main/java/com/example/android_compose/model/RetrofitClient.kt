@@ -13,7 +13,6 @@ object RetrofitClient {
             .build()
     }
 
-    // Fixed: Added '=' and ensured the type matches your filename
     val apiService: ApiInterface by lazy {
         retrofit.create(ApiInterface::class.java)
     }

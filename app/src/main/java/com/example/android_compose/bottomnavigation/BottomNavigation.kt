@@ -31,6 +31,7 @@ sealed class Screen(val route: String, val label: String, val icon: ImageVector)
     object Home : Screen("home", "Home", Icons.Default.Home)
     object Search : Screen("search", "Search", Icons.Default.Search)
     object Profile : Screen("profile", "Profile", Icons.Default.Person)
+
 }
 
 val navItems = listOf(Screen.Home, Screen.Search, Screen.Profile)
