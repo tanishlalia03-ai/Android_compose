@@ -12,8 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.android_compose.bottomnavigation.MainAppContainer
-import com.example.android_compose.jetpackCompose.AssignmentScreen
+import com.example.android_compose.imageRecognition.AIScanScreen
 import com.example.android_compose.ui.theme.Android_composeTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +23,8 @@ class MainActivity : ComponentActivity() {
             Android_composeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        MainAppContainer()
+                       // MainAppContainer()
+                        AIScanScreen()
                     }
                 }
             }

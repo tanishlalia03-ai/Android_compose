@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android_compose.model.Category
-import com.example.android_compose.model.RetrofitClient // Added import
+import com.example.android_compose.model.RetrofitClient
 import kotlinx.coroutines.launch
 
 class CategoryViewModel : ViewModel() {
