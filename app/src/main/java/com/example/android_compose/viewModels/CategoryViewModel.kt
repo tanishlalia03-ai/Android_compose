@@ -1,4 +1,5 @@
-package com.example.android_compose.viewmodel
+package com.example.android_compose.viewModels
+
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,15 +22,12 @@ class CategoryViewModel : ViewModel() {
     private fun fetchCategories() {
         viewModelScope.launch {
             try {
-                isLoading = true
-                // UNCOMMENTED AND UPDATED:
-                // Using .getcategories() to match your ApiInterface exactly
-                val response = RetrofitClient.apiService.getcategories()
+                // Using the separated client
+                val response = RetrofitClient.apiService.getCategories()
                 categoryListResponse = response
+                isLoading = false
             } catch (e: Exception) {
-                errorMessage = e.localizedMessage ?: "Unknown Error"
-            } finally {
-                // This MUST be false to hide the spinner and show the list
+                errorMessage = e.localizedMessage ?: "An error occurred"
                 isLoading = false
             }
         }

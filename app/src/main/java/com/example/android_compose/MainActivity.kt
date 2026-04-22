@@ -12,7 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.android_compose.imageRecognition.AIScanScreen
+import androidx.navigation.compose.rememberNavController
+import com.example.android_compose.drawer.NavDrawerWithNavigation
+import com.example.android_compose.navigation.MainNavigation
 import com.example.android_compose.ui.theme.Android_composeTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,17 +23,23 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Android_composeTheme {
+                // 1. Initialize the NavController here
+                val navController = rememberNavController()
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    // 2. Pass the padding to the Box to prevent UI overlap
                     Box(modifier = Modifier.padding(innerPadding)) {
-                       // MainAppContainer()
-                        AIScanScreen()
+
+                        // 3. Call your Navigation Graph
+                        //MainNavigation(navController = navController)
+                        NavDrawerWithNavigation()
+
                     }
                 }
             }
         }
     }
 }
-
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
