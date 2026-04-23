@@ -74,5 +74,11 @@ dependencies {
     // Day 2
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 
+    //Day3
+    val media3Version = "1.10.0"
+
+    implementation("androidx.media3:media3-exoplayer:${media3Version}")
+    implementation("androidx.media3:media3-ui-compose:$media3Version")
+    implementation("androidx.media3:media3-ui:${media3Version}")
 
 }

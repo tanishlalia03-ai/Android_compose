@@ -71,7 +71,6 @@ data class UserProfile(
     val avatar: String
 )
 
-
 data class StatusResponse(
     val message: String,
     val statusCode: Int? = null

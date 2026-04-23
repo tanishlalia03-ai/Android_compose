@@ -8,11 +8,12 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -21,8 +22,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.android_compose.imageRecognition.AIScanScreen
+import com.example.android_compose.utils.DataStoreManager
 import com.example.android_compose.view.HomeScreen
-
+import com.example.android_compose.view.ProfileScreen // The UI file we created
+import com.example.android_compose.viewModels.ProfileViewModel
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     object Home : Screen("home", "Home", Icons.Default.Home)
@@ -34,8 +37,12 @@ val navItems = listOf(Screen.Home, Screen.Search, Screen.Profile)
 
 @Composable
 fun MainAppContainer(outerNavController: NavHostController) {
-
     val innerNavController = rememberNavController()
+
+    // 1. Setup DataStore to get the saved token
+    val context = LocalContext.current
+    val dataStoreManager = remember { DataStoreManager(context) }
+    val token by dataStoreManager.accessToken.collectAsState(initial = null)
 
     Scaffold(
         bottomBar = {
@@ -68,22 +75,28 @@ fun MainAppContainer(outerNavController: NavHostController) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) { HomeScreen(outerNavController) }
-            composable(Screen.Search.route) { AIScanScreen() }
-            composable(Screen.Profile.route) { ProfileScreen("Profile Content") }
+            composable(Screen.Search.route) { SearchScreen("Search Content") }
+
+            // 2. UPDATED PROFILE ROUTE
+            composable(Screen.Profile.route) {
+                val profileViewModel: ProfileViewModel = viewModel()
+
+                // Trigger the fetch using the token from DataStore
+                LaunchedEffect(token) {
+                    token?.let {
+                        profileViewModel.fetchProfile(it)
+                    }
+                }
+
+                // Call the detailed Profile UI
+                ProfileScreen(viewModel = profileViewModel)
+            }
         }
     }
 }
 
 @Composable
 fun SearchScreen(text: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = text, style = MaterialTheme.typography.headlineMedium)
-    }
-}
-
-
-@Composable
-fun ProfileScreen(text: String) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = text, style = MaterialTheme.typography.headlineMedium)
     }
